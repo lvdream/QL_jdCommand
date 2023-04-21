@@ -6,12 +6,13 @@ from telethon import events
 # 从上级目录引入 jdbot,chat_id变量
 from .. import jdbot, chat_id, logger
 from ..bot.utils import cmd, env_manage_QL, TASK_CMD, AUTH_FILE
-from .jdUtil import sqlite, commandDB, actionMonitor, resetMonitor,proxy, sendHelp
+from .jdUtil import *
 
-_cmd = ['p', 't', 's', 'm', 'mr', 'sr', 'q', 'sa']
+_cmd = ['p', 't', 's', 'm', 'mr', 'md', 'sr', 'q', 'sa']
 defdict = {
     'm': actionMonitor,
     'mr': resetMonitor,
+    'md': delMonitor,
     'p': proxy
 }
 

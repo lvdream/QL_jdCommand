@@ -23,6 +23,7 @@ def sendHelp():
     """
     _msg = '\n**无效指令**\njdCommand 指令设置'
     _msg += "\n**监控频道[频道/组/个人,留空查询]**:\n `/jdCommand m`"
+    _msg += "\n**删除监控频道[频道/组/个人]**:\n `/jdCommand md`"
     _msg += "\n**监控频道重置**:\n `/jdCommand mr`"
     _msg += "\n**设置代理开关[默认:关]**:\n `/jdCommand p on/off`"
     _msg += "\n**查看队列信息**:\n `/jdCommand q`"
@@ -65,6 +66,32 @@ async def actionMonitor(msg_text):
             else:
                 await setSqlite(commandMt, _s + ',' + _c)
                 _rs = f"需要监控的对象[{_c}]已设置完成"
+    return _rs
+
+async def delMonitor(msg_text):
+    """
+    删除监控
+    :return:
+    """
+    _rs = ""
+    if len(msg_text) == 3:
+        """
+        没有参数，默认查询
+        """
+        _s = await getSqlite(commandMt)
+        if None == _s:
+            _rs = "没有设置监控频道,请先完成添加"
+        else:
+            _c = msg_text[2]
+            _rl = str(_s).split(',')
+            if _c in _rl:
+                _rl.remove(_c)
+                await setSqlite(commandMt, ','.join(_rl))
+                _rs = f"需要删除的频道{_c},删除成功！"
+            else:
+                _rs = f"需要删除的频道{_c},没有添加过！"
+    else:
+        _rs = "参数错误，请使用\n`/jdCommand md 频道id`\n进行操作"
     return _rs
 
 
