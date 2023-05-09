@@ -5,6 +5,7 @@ sqlite = SqliteDict(f"data_data.sqlite", autocommit=True)
 commandDB = 'jdCommand'
 commandMt = 'monitor'
 commandPxy = 'pxy'
+commandQueue = 'queue'
 
 
 async def getSqlite(value):
@@ -68,6 +69,7 @@ async def actionMonitor(msg_text):
                 _rs = f"需要监控的对象[{_c}]已设置完成"
     return _rs
 
+
 async def delMonitor(msg_text):
     """
     删除监控
@@ -112,7 +114,6 @@ async def proxy(msg_text):
     """
     _rs = "当前未设置代理"
     isProxy = await getSqlite(commandPxy)
-    logger.info(isProxy)
     isProxy = 0 if None is isProxy or '0' == isProxy else 1
     if 0 == isProxy:
         await setSqlite(commandPxy, '0')
@@ -126,4 +127,29 @@ async def proxy(msg_text):
         _str = '[关闭]' if 0 == isProxy else '[开启]';
         _rs = f"当前代理状态{_str}"
         _rs += f"\n设置代理命令，/jdCommand p on/off"
+    return _rs
+
+
+async def queue(msg_text):
+    """
+    查看队列
+    代码01_*_代码cn$$变量01$$变量02@@代码02_*_代码cn$$变量01$$变量02
+    :return:
+    """
+    _rs = "当前队列长度"
+    lengthQueue = await getSqlite(commandQueue)
+    if not lengthQueue:
+        _rs = f"{_rs}:[0]"
+    else:
+        _list1 = str(lengthQueue).split("@@")  # 代码分隔符
+        _l = 0
+        _t = []
+        for i in _list1:
+            _list2 = str(i).split("$$")  # 代码，子变量分隔符
+            _sl = len(_list2) - 1
+            _cn = str(i).split("_*_")  # 代码，子变量分隔符
+            _l = _l + _sl
+            _t.append(f"{_cn[1]}:[{_sl}]")
+        _rs = f"{_rs}:[{_l}]\n"
+        _rs = _rs + "\n".join(_t)
     return _rs

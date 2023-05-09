@@ -13,7 +13,8 @@ defdict = {
     'm': actionMonitor,
     'mr': resetMonitor,
     'md': delMonitor,
-    'p': proxy
+    'p': proxy,
+    'q': queue
 }
 
 
@@ -37,8 +38,9 @@ async def main(event):
         _rs = await checkCmd(msg_text, msg)
         logger.info(_rs)
         if None is not _rs:
+            _rs = f"✅ 10秒后删除，{_rs}"
             await jdbot.edit_message(msg, _rs)
-            time.sleep(5)
+            time.sleep(10)
             await jdbot.delete_messages(chat_id, msg)
         else:
             await jdbot.edit_message(msg, '开始执行')
